@@ -6,16 +6,18 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { MovielistEnum } from './hooks/movies/useMovieList';
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList { }
   }
 }
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
-  Modal: undefined;
+  Modal: { selectedMovieId: number };
+  Person: { personId: number };
   NotFound: undefined;
 };
 
@@ -25,8 +27,11 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >;
 
 export type RootTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+  Popular: { type: MovielistEnum };
+  TopRated: { type: MovielistEnum };
+  Upcoming: { type: MovielistEnum };
+  Search: undefined;
+  Person: { personId: number };
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
