@@ -57,6 +57,7 @@ export default function PersonScreen({ navigation, route }: RootStackScreenProps
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
+    height: '100%'
   },
   top: {
     display: 'flex',

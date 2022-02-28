@@ -13,7 +13,6 @@ export default function TabOneScreen({ route, navigation }: PropTypes) {
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   useEffect(() => {
     if (selectedMovieId !== null) {
-      console.log('s', selectedMovieId)
       navigation.navigate('MovieSingle', { selectedMovieId })
       setSelectedMovieId(null);
     }

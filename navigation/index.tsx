@@ -14,8 +14,8 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
+import MovieListScreen from '../screens/MovieListScreen';
+import SearchScreen from '../screens/SearchScreen';
 import PersonScreen from '../screens/PersonScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -73,7 +73,7 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="Popular"
         initialParams={{ type: MovielistEnum.Popular }}
-        component={TabOneScreen}
+        component={MovieListScreen}
         options={() => ({
           title: 'Popular Movies',
 
@@ -83,7 +83,7 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="Upcoming"
         initialParams={{ type: MovielistEnum.Upcoming }}
-        component={TabOneScreen}
+        component={MovieListScreen}
         options={() => ({
           title: 'Upcoming',
           tabBarIcon: ({ color }) => <TabBarIcon name="binoculars" color={color} />,
@@ -92,7 +92,7 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="TopRated"
         initialParams={{ type: MovielistEnum.TopRated }}
-        component={TabOneScreen}
+        component={MovieListScreen}
         options={() => ({
           title: 'Top Rated',
           tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
@@ -100,7 +100,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Search"
-        component={TabTwoScreen}
+        component={SearchScreen}
         options={{
           title: 'Search',
           headerShown: false,

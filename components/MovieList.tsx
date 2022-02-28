@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import useMovieList, { MovielistEnum } from '../hooks/movies/useMovieList';
+import Error from './ErrorComponent';
+import Loading from './Loading';
 import MovieListItem from './MovieListItem';
 
 import { View } from './Themed';
@@ -15,15 +17,17 @@ export default function MovieList(props: PropTopes) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => (
-          <MovieListItem
-            movie={item}
-            onItemPress={props.onItemPress}
-          />
-        )}
-      />
+      {loading ? <Loading /> : error ? <Error message={error.message} /> : (
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <MovieListItem
+              movie={item}
+              onItemPress={props.onItemPress}
+            />
+          )}
+        />
+      )}
     </View>
   );
 }

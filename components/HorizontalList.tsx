@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 25,
+    fontWeight: '100',
     marginLeft: 8,
     marginBottom: 5,
   },
