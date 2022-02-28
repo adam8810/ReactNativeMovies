@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { View, Text } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
 import useGetPersonById from "../hooks/movies/usePersonSearch";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Image, ScrollView, StyleSheet } from "react-native";
 import HorizontalListComponent from "../components/HorizontalList";
 import MoviePosterComponent from "../components/MoviePoster";
+import Error from '../components/ErrorComponent';
+import Loading from "../components/Loading";
 
 export default function PersonScreen({ navigation, route }: RootStackScreenProps<'Person'>) {
   const [loading, error, person] = useGetPersonById(route.params.personId);
@@ -18,17 +19,20 @@ export default function PersonScreen({ navigation, route }: RootStackScreenProps
     }
   }, [navigation, loading, person]);
   function onItemPress(selectedMovieId: number) {
-    navigation.navigate('Modal', { selectedMovieId })
+    navigation.push('MovieSingle', { selectedMovieId })
   }
 
-  return loading || (
-    <SafeAreaView>
+  return loading ? <Loading /> : error ? <Error message={error?.message} /> : (
+    <View>
       <ScrollView style={styles.container}>
-        <Image
-          style={styles.profile}
-          source={{ uri: `https://image.tmdb.org/t/p/w185${person.profile_path}` }}
-        />
-        <Text>{person.name}</Text>
+        <View style={styles.top}>
+          <Image
+            style={styles.profile}
+            source={{ uri: `https://image.tmdb.org/t/p/w185${person.profile_path}` }}
+          />
+          <Text>Born: {person.birthday}</Text>
+          {person.deathday && (<Text> - {person.deathday}</Text>)}
+        </View>
         <Text>{person.bio}</Text>
 
         <HorizontalListComponent
@@ -46,7 +50,7 @@ export default function PersonScreen({ navigation, route }: RootStackScreenProps
           )}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -54,12 +58,15 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
+  top: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
   profile: {
     width: 89,
     height: 137,
     marginLeft: 10,
     borderWidth: 1,
-    borderColor: 'white',
     borderRadius: 3,
   },
   movieList: {

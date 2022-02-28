@@ -6,6 +6,8 @@ const GET_SINGLE_PERSON_DETAILS = gql`
     person(personId: $personId) {
       id
       name
+      birthday
+      deathday
       bio
       profile_path
       movies {

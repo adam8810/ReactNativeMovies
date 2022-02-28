@@ -1,45 +1,72 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Image, Platform, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { Animated, Image, Platform, ScrollView, StyleSheet } from 'react-native';
 import useGetMovieById from '../hooks/movies/useMovieById';
-import { useNavigation } from '@react-navigation/native';
 
 import { Text, View } from '../components/Themed';
 import HorizontalListComponent from '../components/HorizontalList';
 import MoviePosterComponent from '../components/MoviePoster';
+import Error from '../components/ErrorComponent';
+import Loading from '../components/Loading';
 
-export default function ModalScreen({ route }: any) {
+export default function MovieSingleScreen({ route, navigation }: any) {
   const [loading, error, movie] = useGetMovieById(route.params.selectedMovieId)
-  const navigation = useNavigation();
+  const pan = useRef(new Animated.ValueXY()).current;
+
 
   function onCastItemPress(personId: number) {
-    navigation.goBack();
-    navigation.navigate('Person', { personId })
+    navigation.push('Person', { personId })
   }
 
   function onSimilarMovieItemPress(selectedMovieId: number) {
-    navigation.goBack();
-    navigation.navigate('Modal', { selectedMovieId })
+    navigation.push('MovieSingle', { selectedMovieId })
   }
 
-  return loading || (
-    <SafeAreaView style={styles.container}>
-      <Image
-        style={styles.backdrop}
+  return loading ? <Loading /> : error ? <Error message={error?.message} /> : (
+    <View style={styles.container}>
+      <Animated.Image
+        resizeMode="cover"
+        style={[styles.backdrop, {
+          transform: [
+            {
+              translateY: pan.y.interpolate({
+                inputRange: [-10000, 0],
+                outputRange: [-100, 0],
+                extrapolate: 'clamp',
+              }),
+            },
+            {
+              scale: pan.y.interpolate({
+                inputRange: [-30000, 0],
+                outputRange: [20, 1],
+                extrapolate: 'clamp',
+              }),
+            },
+          ],
+        }]}
         source={{ uri: `https://image.tmdb.org/t/p/w500${movie?.backdrop_path}` }}
-      />
+      >
+      </Animated.Image>
       <ScrollView
+        scrollEventThrottle={1}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: pan.y } } }],
+          {
+            useNativeDriver: false,
+          }
+        )}
         style={styles.mainView}>
+        <View style={{ height: 200, width: 0 }} />
         <View>
           <MoviePosterComponent
-            title={movie.title}
+            title={movie?.title}
             style={styles.poster}
             size="w154"
             posterPath={movie?.poster_path}
           />
           <Text style={styles.title}>{movie?.title}</Text>
           <Text style={styles.tagline}>{movie?.tagline}</Text>
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <View style={{ height: 0, width: '100%', marginVertical: 30 }} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
           <Text style={styles.overview}>{movie?.overview}</Text>
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
@@ -60,6 +87,7 @@ export default function ModalScreen({ route }: any) {
               </View>
             )}
           />
+          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
           <HorizontalListComponent
             heading="Similar Movies"
             data={movie?.similar}
@@ -72,26 +100,50 @@ export default function ModalScreen({ route }: any) {
                     uri: `https://image.tmdb.org/t/p/w185${item.poster_path}`
                   }}
                 />
-                <Text>{item.title}</Text>
+                <Text>{item?.title}</Text>
               </View>
             )}
           />
+          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          {movie?.providers.flatrate.length > 0 ? (
+            <HorizontalListComponent
+              heading="Streamimg"
+              data={movie?.providers.flatrate}
+              onItemPress={(item) => onSimilarMovieItemPress(item.id)}
+              renderItem={({ item }) => (
+                <View style={styles.provider}>
+                  <Image
+                    style={styles.provider}
+                    source={{
+                      uri: `https://image.tmdb.org/t/p/w92${item.logo_path}`
+                    }}
+                  />
+                  <Text>{item.logo_path}</Text>
+                </View>
+              )}
+            />
+          ) : <Text>Not Streaming Anywhere</Text>}
         </View>
       </ScrollView>
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </SafeAreaView>
+    </View >
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    paddingBottom: 20,
+  },
+  backdrop: {
+    position: 'absolute',
+    height: 200,
+    width: '100%',
   },
   mainView: {
-    paddingTop: 205
+    flex: 1,
   },
   title: {
     fontSize: 20,
@@ -109,12 +161,7 @@ const styles = StyleSheet.create({
   separator: {
     marginVertical: 30,
     height: 1,
-    width: '80%',
-  },
-  backdrop: {
-    height: 200,
     width: '100%',
-    position: 'absolute'
   },
   poster: {
     width: 89,
@@ -125,20 +172,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     borderRadius: 3,
-    backgroundColor: 'red',
   },
   castList: {
     marginBottom: 30,
     paddingBottom: 160,
   },
   cast_item: {
-    width: 180 * .6,
+    width: 108,
     marginLeft: 5,
     marginRight: 10,
   },
   cast_profile: {
-    height: 275 * .6,
+    height: 165,
     borderRadius: 10,
-    width: 180 * .6,
+    width: 108,
   },
+  provider: {
+    borderRadius: 100,
+    height: 45,
+    marginRight: 10,
+    width: 45,
+  }
 });

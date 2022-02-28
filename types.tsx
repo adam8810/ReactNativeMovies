@@ -18,6 +18,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: { selectedMovieId: number };
   Person: { personId: number };
+  MovieSingle: { selectedMovieId: number };
   NotFound: undefined;
 };
 
@@ -31,7 +32,6 @@ export type RootTabParamList = {
   TopRated: { type: MovielistEnum };
   Upcoming: { type: MovielistEnum };
   Search: undefined;
-  Person: { personId: number };
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

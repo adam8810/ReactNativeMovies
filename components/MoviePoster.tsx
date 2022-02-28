@@ -16,8 +16,8 @@ export default function MoviePosterComponent(
     <View>
       {!posterPath ? (
         <View
-          style={[styles.movie_poster, style]}>
-          <Text>{title}</Text>
+          style={[styles.movie_poster, styles.noImage, style]}>
+          <Text style={{ alignSelf: 'center', fontSize: 20, color: '#FFFFFF' }}>{title}</Text>
         </View>
 
       ) : (
@@ -37,6 +37,13 @@ const styles = StyleSheet.create({
     height: 165,
     borderRadius: 10,
     width: 108,
-    backgroundColor: '#0E8A16'
   },
+  noImage: {
+    backgroundColor: '#3949AB',
+    display: 'flex',
+    alignContent: 'center',
+    justifyContent: 'center',
+    paddingTop: 2,
+    paddingLeft: 2,
+  }
 });

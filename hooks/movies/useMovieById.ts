@@ -3,7 +3,7 @@ import { MovieItem } from '../../types/movie';
 
 const GET_SINGLE_MOVIE_DETAILS = gql`
   query Query($movieId: Int!) {
-    moviesById(id: $movieId) {
+    movieById(id: $movieId) {
       title
       tagline
       overview
@@ -11,6 +11,28 @@ const GET_SINGLE_MOVIE_DETAILS = gql`
       runtime
       poster_path
       backdrop_path
+      providers {
+        rent {
+          id
+          name 
+          logo_path
+        }
+        buy {
+          id
+          name 
+          logo_path
+        }
+        flatrate {
+          id
+          name 
+          logo_path
+        }
+      }
+      similar {
+        id
+        title
+        poster_path
+      }
       cast {
         id
         name
@@ -26,5 +48,5 @@ export default function useGetMovieById(movieId: number): [boolean, ApolloError 
     variables: { movieId },
   });
 
-  return [loading, error, data?.moviesById || null];
+  return [loading, error, data?.movieById || null];
 }

@@ -6,7 +6,6 @@ import {
   ListRenderItem,
   Pressable
 } from "react-native";
-import MovieListItem from "./MovieListItem";
 import { Text } from "./Themed";
 
 export default function HorizontalListComponent<T>(
@@ -38,11 +37,9 @@ export default function HorizontalListComponent<T>(
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 25,
   },
   heading: {
     fontSize: 25,
-    fontWeight: 'bold',
     marginLeft: 8,
     marginBottom: 5,
   },

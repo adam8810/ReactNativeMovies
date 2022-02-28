@@ -21,6 +21,7 @@ import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../typ
 import LinkingConfiguration from './LinkingConfiguration';
 
 import { MovielistEnum } from '../hooks/movies/useMovieList';
+import MovieSingleScreen from '../screens/MovieSingleScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -44,6 +45,7 @@ function RootNavigator() {
       <Stack.Group>
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
         <Stack.Screen name="Person" component={PersonScreen} options={{ headerShown: true }} />
+        <Stack.Screen name="MovieSingle" component={MovieSingleScreen} options={{ headerShown: false }} />
         <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
@@ -79,21 +81,21 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TopRated"
-        initialParams={{ type: MovielistEnum.TopRated }}
-        component={TabOneScreen}
-        options={() => ({
-          title: 'Top Rated',
-          tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
-        })}
-      />
-      <BottomTab.Screen
         name="Upcoming"
         initialParams={{ type: MovielistEnum.Upcoming }}
         component={TabOneScreen}
         options={() => ({
           title: 'Upcoming',
           tabBarIcon: ({ color }) => <TabBarIcon name="binoculars" color={color} />,
+        })}
+      />
+      <BottomTab.Screen
+        name="TopRated"
+        initialParams={{ type: MovielistEnum.TopRated }}
+        component={TabOneScreen}
+        options={() => ({
+          title: 'Top Rated',
+          tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
         })}
       />
       <BottomTab.Screen
