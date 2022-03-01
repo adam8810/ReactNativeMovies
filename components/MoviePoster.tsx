@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     width: 108,
   },
   noImage: {
-    backgroundColor: '#3949AB',
+    backgroundColor: '#EEEEEE',
     display: 'flex',
     alignContent: 'center',
     justifyContent: 'center',

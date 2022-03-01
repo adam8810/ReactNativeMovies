@@ -70,64 +70,71 @@ export default function MovieSingleScreen({ route, navigation }: any) {
           <Text style={styles.overview}>{movie?.overview}</Text>
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
-          <HorizontalListComponent
-            heading="Cast"
-            data={movie?.cast}
-            onItemPress={(item) => onCastItemPress(item.id)}
-            renderItem={({ item }) => (
-              <View style={styles.cast_item}>
-                <Image
-                  style={styles.cast_profile}
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/w185${item?.profile_path}`
-                  }}
-                />
-                <Text>{item.name}</Text>
-                <Text>{item.character}</Text>
-              </View>
-            )}
-          />
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-          <HorizontalListComponent
-            heading="Similar Movies"
-            data={movie?.similar}
-            onItemPress={(item) => onSimilarMovieItemPress(item.id)}
-            renderItem={({ item }) => (
-              <View style={styles.cast_item}>
-                <Image
-                  style={styles.cast_profile}
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/w185${item.poster_path}`
-                  }}
-                />
-                <Text>{item?.title}</Text>
-              </View>
-            )}
-          />
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-          {movie?.providers.flatrate.length > 0 ? (
+          <View style={styles.horizontal_section}>
             <HorizontalListComponent
-              heading="Streamimg"
-              data={movie?.providers.flatrate}
-              onItemPress={(item) => onSimilarMovieItemPress(item.id)}
+              heading="Cast"
+              data={movie?.cast}
+              onItemPress={(item) => onCastItemPress(item.id)}
               renderItem={({ item }) => (
-                <View style={styles.provider}>
+                <View style={styles.horizontal_item}>
                   <Image
-                    style={styles.provider}
+                    style={styles.cast_profile}
                     source={{
-                      uri: `https://image.tmdb.org/t/p/w92${item.logo_path}`
+                      uri: `https://image.tmdb.org/t/p/w185${item?.profile_path}`
                     }}
                   />
-                  <Text>{item.logo_path}</Text>
+                  <Text>{item.name}</Text>
+                  <Text>{item.character}</Text>
                 </View>
               )}
             />
-          ) : <Text>Not Streaming Anywhere</Text>}
+          </View>
+          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <View style={styles.horizontal_section}>
+            <HorizontalListComponent
+              heading="Similar Movies"
+              data={movie?.similar}
+              onItemPress={(item) => onSimilarMovieItemPress(item.id)}
+              renderItem={({ item }) => (
+                <View style={styles.horizontal_item}>
+                  <Image
+                    style={styles.cast_profile}
+                    source={{
+                      uri: `https://image.tmdb.org/t/p/w185${item.poster_path}`
+                    }}
+                  />
+                  <Text>{item?.title}</Text>
+                </View>
+              )}
+            />
+          </View>
+          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+
+          <View style={styles.provider_section}>
+            {movie?.providers.flatrate.length > 0 ? (
+              <HorizontalListComponent
+                heading="Streaming"
+                data={movie?.providers.flatrate}
+                onItemPress={(item) => onSimilarMovieItemPress(item.id)}
+                renderItem={({ item }) => (
+                  <View style={styles.provider}>
+                    <Image
+                      style={styles.provider}
+                      source={{
+                        uri: `https://image.tmdb.org/t/p/w92${item.logo_path}`
+                      }}
+                    />
+                    <Text>{item.logo_path}</Text>
+                  </View>
+                )}
+              />
+            ) : <Text>Not Streaming Anywhere</Text>}
+          </View>
         </View>
-      </ScrollView>
+      </ScrollView >
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      < StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View >
   );
 }
@@ -159,7 +166,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   separator: {
-    marginVertical: 30,
+    marginBottom: 5,
     height: 1,
     width: '100%',
   },
@@ -173,11 +180,11 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 3,
   },
-  castList: {
-    marginBottom: 30,
-    paddingBottom: 160,
+  horizontal_section: {
+    marginBottom: 15,
+    marginLeft: 8,
   },
-  cast_item: {
+  horizontal_item: {
     width: 108,
     marginLeft: 5,
     marginRight: 10,
@@ -187,10 +194,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 108,
   },
+  provider_section: {
+    marginLeft: 0,
+  },
   provider: {
     borderRadius: 100,
     height: 45,
-    marginRight: 10,
+    marginLeft: 4,
     width: 45,
   }
 });

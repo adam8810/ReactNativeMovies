@@ -7,6 +7,7 @@ import HorizontalListComponent from "../components/HorizontalList";
 import MoviePosterComponent from "../components/MoviePoster";
 import Error from '../components/ErrorComponent';
 import Loading from "../components/Loading";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PersonScreen({ navigation, route }: RootStackScreenProps<'Person'>) {
   const [loading, error, person] = useGetPersonById(route.params.personId);
@@ -24,49 +25,60 @@ export default function PersonScreen({ navigation, route }: RootStackScreenProps
 
   return loading ? <Loading /> : error ? <Error message={error?.message} /> : (
     <View>
-      <ScrollView style={styles.container}>
-        <View style={styles.top}>
-          <Image
-            style={styles.profile}
-            source={{ uri: `https://image.tmdb.org/t/p/w185${person.profile_path}` }}
-          />
-          <Text>Born: {person.birthday}</Text>
-          {person.deathday && (<Text> - {person.deathday}</Text>)}
-        </View>
-        <Text>{person.bio}</Text>
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.top}>
+            <Image
+              style={styles.profile}
+              source={{ uri: `https://image.tmdb.org/t/p/w185${person.profile_path}` }}
+            />
+            <Text>Born: {person.birthday}</Text>
+            {person.deathday && (<Text> - {person.deathday}</Text>)}
+          </View>
+          <Text style={styles.bio}>{person.bio}</Text>
 
-        <HorizontalListComponent
-          heading="Movies"
-          data={person.movies}
-          onItemPress={(item) => onItemPress(item.id)}
-          renderItem={({ item }) => (
-            <View style={styles.movie_item}>
-              <MoviePosterComponent
-                title={item.title}
-                posterPath={item.poster_path}
-                size="w185"
-              />
-            </View>
-          )}
-        />
-      </ScrollView>
+          <HorizontalListComponent
+            heading="Movies"
+            data={person.movies}
+            onItemPress={(item) => onItemPress(item.id)}
+            renderItem={({ item }) => (
+              <View style={styles.movie_item}>
+                <MoviePosterComponent
+                  title={item.title}
+                  posterPath={item.poster_path}
+                  size="w185"
+                />
+              </View>
+            )}
+          />
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    height: '100%'
+    paddingTop: 0,
+  },
+  scrollView: {
+    height: '100%',
+    paddingHorizontal: 0,
   },
   top: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginLeft: 5,
+  },
+  bio: {
+    marginVertical: 20,
+    marginLeft: 5,
   },
   profile: {
     width: 89,
     height: 137,
-    marginLeft: 10,
+    marginLeft: 3,
+    marginRight: 10,
     borderWidth: 1,
     borderRadius: 3,
   },
